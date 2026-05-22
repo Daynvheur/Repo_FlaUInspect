@@ -40,7 +40,10 @@ public partial class ProcessWindow : Window {
     }
 
     private void ProcessWindow_Closed(object? sender, EventArgs e) {
-        if (Application.Current.Windows.Count == 1 && Application.Current.MainWindow is StartupWindow startupWindow) {
+        if (Application.Current.Windows.Count >= 1 && Application.Current.MainWindow is StartupWindow startupWindow) { // On WPF debug, there is a secondary AdornerWindow attached to the process
+                                                                                                                       // and this may be the case in other places aswell.
+                                                                                                                       // There is no need to check for window singleness,
+                                                                                                                       // only that at least the current MainWindow is the StartupWindow
             if (DataContext is ProcessViewModel processViewModel) {
                 if (processViewModel.ClosingCommand.CanExecute(DataContext)) {
                     processViewModel.ClosingCommand.Execute(DataContext);
